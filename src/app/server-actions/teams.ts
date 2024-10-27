@@ -1,9 +1,13 @@
 "use server";
 
 import { db } from "@/db";
-import { team } from "@/db/schema";
+import { team, tournament } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-export const getTeamsForMatch = async (matchId: string) => {
-  const teams = db.select().from(team);
+export const getTeamsForTournament = async (tournamentId: number) => {
+  const teams = await db
+    .select()
+    .from(team)
+    .where(eq(team.tournament_id, tournamentId));
   return teams;
 };
