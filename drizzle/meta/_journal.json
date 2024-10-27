@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1727872386306,
-      "tag": "0000_fixed_dreadnoughts",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1727872917356,
-      "tag": "0001_simple_turbo",
+      "when": 1729979322218,
+      "tag": "0000_black_tigra",
       "breakpoints": true
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "id": "bad6634c-9bf1-4762-b244-f8f10914b84b",
+  "id": "bb13c7d0-c582-4f57-9b3f-76957aaac64c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -8,17 +8,17 @@
       "name": "match",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "tournament_id": {
           "name": "tournament_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
-        },
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
         },
         "team1_id": {
           "name": "team1_id",
@@ -91,7 +91,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "name": {
@@ -125,7 +125,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "player_id": {
@@ -192,7 +192,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "name": {
@@ -215,6 +215,12 @@
         },
         "player2_id": {
           "name": "player2_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tournament_id": {
+          "name": "tournament_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -247,6 +253,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "team_tournament_id_tournament_id_fk": {
+          "name": "team_tournament_id_tournament_id_fk",
+          "tableFrom": "team",
+          "tableTo": "tournament",
+          "columnsFrom": [
+            "tournament_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -259,7 +278,7 @@
         "id": {
           "name": "id",
           "type": "serial",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "name": {

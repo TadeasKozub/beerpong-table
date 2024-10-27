@@ -19,6 +19,7 @@ export const team = pgTable("team", {
   score: numeric("score"),
   player1_id: integer("player1_id").references(() => player.id),
   player2_id: integer("player2_id").references(() => player.id),
+  tournament_id: integer("tournament_id").references(() => tournament.id),
 });
 
 export const match = pgTable("match", {
