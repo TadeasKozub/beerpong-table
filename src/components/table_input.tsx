@@ -4,7 +4,9 @@ export const TableInput = (props: any) => (
   <td>
     <input
       type="number"
-      placeholder="asdasdasd"
+      defaultValue={0}
+      min={0}
+      placeholder="score"
       className="input input-bordered w-full max-w-xs"
       {...props}
     />

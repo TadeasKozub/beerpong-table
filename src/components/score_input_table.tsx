@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import { createNewMatch } from "@/actions/matches";
 import { getPlayersForTeamId } from "@/actions/players";
 import { useToast } from "@/hooks/use-toast";
@@ -6,6 +7,17 @@ import { PlayerCouple } from "@/types/player";
 import { Team } from "@/types/team";
 import { useState } from "react";
 import { TableInput } from "./table_input";
+=======
+import { Team } from "@/types/team";
+import { TableInput } from "./table_input";
+import { useRef, useState } from "react";
+import { PlayerCouple } from "@/types/player";
+import { getPlayersForTeamId } from "@/app/server-actions/players";
+import { createNewMatch } from "@/app/server-actions/matches";
+import { useToast } from "@/hooks/use-toast";
+import { SubmitDialog } from "./submit_dialog";
+import { team } from "@/db/schema";
+>>>>>>> score
 
 export const ScoreInputTable = (props: {
   teams: Team[];
@@ -18,6 +30,7 @@ export const ScoreInputTable = (props: {
 
   const { toast } = useToast();
 
+  const formRef = useRef(null);
   const [team1, setTeam1] = useState<Team | null>(null);
   const [team2, setTeam2] = useState<Team | null>(null);
   const [team1Players, setTeam1Players] =
@@ -51,11 +64,16 @@ export const ScoreInputTable = (props: {
     }
   };
 
+  function handleModalConfirm() {
+    if (formRef?.current) {
+      formRef.current.requestSubmit();
+    }
+  }
+
   const handleSubmit = async (event: any) => {
     event.preventDefault(); // Prevent page reload
     const formData = new FormData(event.target);
 
-    // Extract form data
     const values = Object.fromEntries(formData.entries());
     console.log(values); // Use form data as needed
 
@@ -64,6 +82,15 @@ export const ScoreInputTable = (props: {
       toast({
         title: "Error submitting match",
         description: "Team not selected",
+      });
+      return;
+    }
+
+    if (team1?.id == team2?.id) {
+      toast({
+        title: "Error submitting match",
+        description: "Select two distinct teams",
+        duration: 2000,
       });
       return;
     }
@@ -78,15 +105,17 @@ export const ScoreInputTable = (props: {
     toast({
       title: "Match saved successfully",
       description: "Dobrá práce, kámobráško",
+      duration: 2000,
     });
 
-    // refresh the page
+    // reset the form values to default
+    event.target.reset();
   };
 
   return (
     <div className="overflow-x-auto">
       <div>{JSON.stringify(props.teams)}</div>
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         <table className="min-w-full border-collapse table-auto text-center">
           <thead className="bg-gray-800">
             <tr>
@@ -175,18 +204,10 @@ export const ScoreInputTable = (props: {
           </tbody>
         </table>
         <div className="flex justify-end w-full">
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-          <button
-            onClick={() =>
-              toast({
-                title: "sup, bitch",
-              })
-            }
-          >
-            show toast
-          </button>
+          <SubmitDialog
+            handleModalConfirm={handleModalConfirm}
+            description={`Team ${team1?.name} : Team ${team2?.name}`}
+          />
         </div>
       </form>
     </div>
