@@ -7,12 +7,23 @@ import { checkMatches, loadTournament } from "./action";
 export default async function Home(params: {
   params: { tournamentid: number };
 }) {
+  if (!Number.isInteger(Number(params.params.tournamentid))) {
+    return <div>Wrong Tournament ID format</div>;
+  }
+
   const matches = await checkMatches(params.params.tournamentid);
   const tournament = await loadTournament(params.params.tournamentid);
+  if (tournament === null) {
+    return (
+      <div>
+        Tournament with ID ${params.params.tournamentid} does not exist.
+      </div>
+    );
+  }
   return (
     <>
-      ID TURNAJE :{tournament.id}
-      JMENO TURNAJE: {tournament.name}
+      ID TURNAJE :{tournament?.id}
+      JMENO TURNAJE: {tournament?.name}
       {matches.bool ? (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
           <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -55,7 +66,7 @@ export default async function Home(params: {
             </div>
           </main>
           <div className="fixed bottom-8 right-8">
-            <AddNewMatchButton id={tournament.id} />
+            {tournament?.id && <AddNewMatchButton id={tournament?.id} />}
           </div>
         </div>
       )}
