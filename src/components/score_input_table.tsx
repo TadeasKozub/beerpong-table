@@ -1,23 +1,12 @@
 "use client";
-<<<<<<< HEAD
-import { createNewMatch } from "@/actions/matches";
-import { getPlayersForTeamId } from "@/actions/players";
-import { useToast } from "@/hooks/use-toast";
-import { PlayerCouple } from "@/types/player";
-import { Team } from "@/types/team";
-import { useState } from "react";
-import { TableInput } from "./table_input";
-=======
 import { Team } from "@/types/team";
 import { TableInput } from "./table_input";
 import { useRef, useState } from "react";
 import { PlayerCouple } from "@/types/player";
-import { getPlayersForTeamId } from "@/app/server-actions/players";
-import { createNewMatch } from "@/app/server-actions/matches";
 import { useToast } from "@/hooks/use-toast";
 import { SubmitDialog } from "./submit_dialog";
-import { team } from "@/db/schema";
->>>>>>> score
+import { getPlayersForTeamId } from "@/actions/players";
+import { createNewMatch } from "@/actions/matches";
 
 export const ScoreInputTable = (props: {
   teams: Team[];
@@ -66,6 +55,7 @@ export const ScoreInputTable = (props: {
 
   function handleModalConfirm() {
     if (formRef?.current) {
+      //@ts-ignore
       formRef.current.requestSubmit();
     }
   }
