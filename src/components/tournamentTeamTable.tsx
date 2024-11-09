@@ -1,5 +1,6 @@
 "use server";
-import { loadAllTeams } from "@/actions/teams";
+import { deleteTeam, loadAllTeams } from "@/actions/teams";
+import { DeleteButton } from "./delete-button";
 
 interface Player {
   id: number;
@@ -53,6 +54,9 @@ export default async function TournamentTeamTable(id: { id: number }) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {data.player2?.name || "N/A"}
+                </td>
+                <td>
+                  <DeleteButton id={data.team.id} />
                 </td>
               </tr>
             ))}

@@ -8,7 +8,7 @@ export default async function Page() {
 
   if (session?.userId) {
     return (
-      <div className="flex justify-center h-screen">
+      <div className="flex justify-center h-full">
         <div className="flex flex-col items-center">
           <p className="m-4">
             You're logged in as user id #{String(session?.userId)}.
@@ -23,7 +23,7 @@ export default async function Page() {
     );
   }
   return (
-    <div className="h-screen">
+    <div className="h-full">
       <form
         action={login}
         className="max-w-sm mx-auto p-8 bg-gray-900 rounded-lg shadow-lg"
