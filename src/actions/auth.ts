@@ -17,6 +17,7 @@ export async function login(formData: FormData) {
   await createSession("1");
 
   console.log("login succesful");
+  redirect("/");
 }
 
 export async function logout() {
