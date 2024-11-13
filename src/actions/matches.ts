@@ -7,12 +7,14 @@ import { eq } from "drizzle-orm";
 export const createNewMatch = async (
   tournamentId: number,
   team1Id: number,
-  team2Id: number
+  team2Id: number,
+  score: string
 ) => {
   await db.insert(match).values({
     tournament_id: tournamentId,
     team1_id: team1Id,
     team2_id: team2Id,
+    score,
   });
 };
 
@@ -24,16 +26,16 @@ export const getMatchesForTournament = async (tournamentId: number) => {
   return matches;
 };
 
-export const createPlayerMatchEntry = async (
-  playerId: number,
-  matchId: number,
-  score: number,
-  blowjobs: number
-) => {
-  await db.insert(player_match_score).values({
-    player_id: playerId,
-    match_id: matchId,
-    score,
-    blowjobs,
-  });
-};
+// export const createPlayerMatchEntry = async (
+//   playerId: number,
+//   matchId: number,
+//   score: number,
+//   blowjobs: number
+// ) => {
+//   await db.insert(player_match_score).values({
+//     player_id: playerId,
+//     match_id: matchId,
+//     score,
+//     blowjobs,
+//   });
+// };
