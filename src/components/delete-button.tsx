@@ -1,15 +1,13 @@
 "use client";
 
 import { deleteTeam } from "@/actions/teams";
-import { useTransition } from "react";
 
 export const DeleteButton = ({ id }: any) => {
-  let [isPending, startTransition] = useTransition();
+  const removeTeam = async (id: number) => {
+    await deleteTeam(id);
+  };
   return (
-    <button
-      className="btn btn-error"
-      onClick={() => startTransition(() => deleteTeam(id))}
-    >
+    <button className="btn btn-error" onClick={() => deleteTeam(id)}>
       Delete
     </button>
   );

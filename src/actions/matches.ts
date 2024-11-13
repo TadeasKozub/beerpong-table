@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { match } from "@/db/schema";
+import { match, player_match_score } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const createNewMatch = async (
@@ -22,4 +22,18 @@ export const getMatchesForTournament = async (tournamentId: number) => {
     .from(match)
     .where(eq(match.tournament_id, tournamentId));
   return matches;
+};
+
+export const createPlayerMatchEntry = async (
+  playerId: number,
+  matchId: number,
+  score: number,
+  blowjobs: number
+) => {
+  await db.insert(player_match_score).values({
+    player_id: playerId,
+    match_id: matchId,
+    score,
+    blowjobs,
+  });
 };

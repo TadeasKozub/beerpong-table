@@ -88,6 +88,12 @@ export const ScoreInputTable = (props: {
     // create a match entry in the db
 
     await createNewMatch(props.tournamentId, team1?.id, team2?.id);
+    // await createPlayerMatchEntry(
+    //   team1.player1_id,
+    //   MATCHID,
+    //   formData.get("team1player1score") || 0,
+    //   formData.get("team1player1BJ") || 0
+    //
 
     // create 4 match-player entries in the db
 
