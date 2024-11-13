@@ -1,11 +1,7 @@
 "use server";
-<<<<<<< HEAD
 import { deleteTeam, loadAllTeams } from "@/actions/teams";
 import { DeleteButton } from "./delete-button";
-=======
-import { loadAllTeams } from "@/actions/teams";
 import DeleteTeamButton from "@/components/deleteTeamButton";
->>>>>>> a7d48cb18b2f4f26cd3360df554107e971595a8f
 
 interface TeamData {
   teamId: number;
