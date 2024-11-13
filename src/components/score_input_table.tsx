@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { PlayerCouple } from "@/types/player";
 import { useToast } from "@/hooks/use-toast";
 import { SubmitDialog } from "./submit_dialog";
-import { getPlayersForTeamId } from "@/actions/players";
+import { addPlayerScoreAndBJ, getPlayersForTeamId } from "@/actions/players";
 import { createNewMatch } from "@/actions/matches";
 
 export const ScoreInputTable = (props: {
@@ -86,8 +86,48 @@ export const ScoreInputTable = (props: {
     }
 
     // create a match entry in the db
+    const t1score =
+      Number(values.team1player1score) + Number(values.team1player2score);
+    const t2score =
+      Number(values.team2player1score) + Number(values.team2player2score);
 
-    await createNewMatch(props.tournamentId, team1?.id, team2?.id);
+    await createNewMatch(
+      props.tournamentId,
+      team1?.id,
+      team2?.id,
+      `${t1score}:${t2score}`
+    );
+    await addPlayerScoreAndBJ(
+      team1.player1_id!,
+      Number(values.team1player1score),
+      Number(values.team1player1BJ)
+    );
+    await addPlayerScoreAndBJ(
+      team1.player2_id!,
+      Number(values.team1player2score),
+      Number(values.team1player2BJ)
+    );
+    await addPlayerScoreAndBJ(
+      team2.player1_id!,
+      Number(values.team2player1score),
+      Number(values.team2player1BJ)
+    );
+    await addPlayerScoreAndBJ(
+      team2.player2_id!,
+      Number(values.team2player2score),
+      Number(values.team2player2BJ)
+    );
+
+    //
+    // TODO: huge refactoring needed
+    //
+
+    // await createPlayerMatchEntry(
+    //   team1.player1_id,
+    //   MATCHID,
+    //   formData.get("team1player1score") || 0,
+    //   formData.get("team1player1BJ") || 0
+    //
 
     // create 4 match-player entries in the db
 

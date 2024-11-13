@@ -25,7 +25,7 @@ export async function loadTournament(id: number) {
     .select()
     .from(tournament)
     .where(eq(tournament.id, id));
-  return tournamentData[0];
+  return tournamentData.length > 0 ? tournamentData[0] : null;
 }
 
 export async function findTeamCount(id: number) {

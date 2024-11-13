@@ -1,5 +1,6 @@
 "use server";
-import { loadAllTeams } from "@/actions/teams";
+import { deleteTeam, loadAllTeams } from "@/actions/teams";
+import { DeleteButton } from "./delete-button";
 import DeleteTeamButton from "@/components/deleteTeamButton";
 
 interface TeamData {
@@ -46,6 +47,9 @@ export default async function TournamentTeamTable(id: { id: number }) {
                 </td>
                 <td>
                   <DeleteTeamButton id={data.teamId} />
+                </td>
+                <td>
+                  <DeleteButton id={data.team.id} />
                 </td>
               </tr>
             ))}
