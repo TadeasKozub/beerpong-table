@@ -1,19 +1,24 @@
 "use server";
 
 import { match, player, team, tournament } from "@/db/schema";
-import { eq } from "drizzle-orm"; // Replace "some-library" with the actual library name
+import { aliasedTable, and, eq } from "drizzle-orm"; // Replace "some-library" with the actual library name
 import { revalidatePath } from "next/cache";
 import { db } from "../../db";
 
-export async function checkMatches(id: number) {
+export async function loadMatches(id: number) {
+  const team1 = aliasedTable(team, "team1");
+  const team2 = aliasedTable(team, "team2");
   const matches = await db
     .select()
     .from(match)
-    .where(eq(match.tournament_id, id));
+    .where(eq(match.tournament_id, id))
+    .leftJoin(team1, eq(match.team1_id, team1.id))
+    .leftJoin(team2, eq(match.team2_id, team2.id));
   if (matches.length === 0) {
-    return { bool: false, id: id };
+    return null;
   }
-  return { bool: true, id: id };
+  console.log(matches);
+  return matches;
 }
 export async function loadTournament(id: number) {
   const tournamentData = await db
@@ -40,7 +45,12 @@ export async function createTeam(formData: FormData) {
     return { error: "Zadej všechny údaje o týmu" };
   }
 
-  const teamExist = await db.select().from(team).where(eq(team.name, teamName));
+  const teamExist = await db
+    .select()
+    .from(team)
+    .where(
+      and(eq(team.name, teamName), eq(team.tournament_id, Number(tournamentId)))
+    );
   if (teamExist.length !== 0) {
     return { error: "Tym existuje" + teamName };
   }

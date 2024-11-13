@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { match, player_match_score } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export const createNewMatch = async (
   tournamentId: number,
@@ -39,3 +40,11 @@ export const getMatchesForTournament = async (tournamentId: number) => {
 //     blowjobs,
 //   });
 // };
+
+export const deleteMatch = async (id: number) => {
+  const tournament_id = await db
+    .delete(match)
+    .where(eq(match.id, id))
+    .returning({ deletedId: match.tournament_id });
+  redirect("/" + tournament_id[0].deletedId);
+};
