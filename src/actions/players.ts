@@ -28,14 +28,14 @@ export const addPlayerScoreAndBJ = async (
   score: number,
   BJ: number
 ) => {
-  // I need to add the score on top of the current score:
+  console.log("addPlayerScoreAndBJ", playerId, score, BJ);
   const pl = await getPlayerById(playerId);
   if (!pl) {
     throw new Error("Player not found");
   }
 
-  let newScore = pl.score ? Number(pl.score!) + score : 0;
-  let newBJ = pl.blowjobs ? Number(pl.blowjobs!) + BJ : 0;
+  let newScore = pl.score ? Number(pl.score!) + score : score;
+  let newBJ = pl.blowjobs ? Number(pl.blowjobs!) + BJ : BJ;
 
   await db
     .update(player)

@@ -16,14 +16,7 @@ export async function loadAllTeams(id: number) {
 
   console.log("id", id);
   const teams = await db
-    .select({
-      teamId: team.id,
-      teamName: team.name,
-      player1Id: player1.id,
-      player1Name: player1.name,
-      player2Id: player2.id,
-      player2Name: player2.name,
-    })
+    .select()
     .from(team)
     .leftJoin(player1, eq(team.player1_id, player1.id))
     .leftJoin(player2, eq(team.player2_id, player2.id))
@@ -126,6 +119,9 @@ export const getTeamsForTournamentSorted = async (tournamentId: number) => {
 };
 
 // export const deleteTeam = async (teamId: number) => {
-//     const tournament_id = await db.delete(team).where(eq(team.id, teamId)).returning({tournamentid: team.tournament_id});
-//     redirect("/"+tournament_id[0].tournamentid);
-// }
+//   const tournament_id = await db
+//     .delete(team)
+//     .where(eq(team.id, teamId))
+//     .returning({ tournamentid: team.tournament_id });
+//   redirect("/" + tournament_id[0].tournamentid);
+// };
