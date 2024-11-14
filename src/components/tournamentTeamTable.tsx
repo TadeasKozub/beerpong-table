@@ -1,6 +1,5 @@
 "use server";
-import { deleteTeam, loadAllTeams } from "@/actions/teams";
-import { DeleteButton } from "./delete-button";
+import { loadAllTeams } from "@/actions/teams";
 import DeleteTeamButton from "@/components/deleteTeamButton";
 
 interface TeamData {
@@ -13,7 +12,15 @@ interface TeamData {
 }
 
 export default async function TournamentTeamTable(id: { id: number }) {
-  const tournamentTeamData: TeamData[] = await loadAllTeams(id.id);
+  const rawTeamData = await loadAllTeams(id.id);
+  const tournamentTeamData: TeamData[] = rawTeamData.map((item: any) => ({
+    teamId: item.team.id,
+    teamName: item.team.name,
+    player1Id: item.team.player1_id,
+    player1Name: item.player1?.name || null,
+    player2Id: item.team.player2_id,
+    player2Name: item.player2?.name || null,
+  }));
   console.log(tournamentTeamData);
   return (
     <>
@@ -48,9 +55,7 @@ export default async function TournamentTeamTable(id: { id: number }) {
                 <td>
                   <DeleteTeamButton id={data.teamId} />
                 </td>
-                <td>
-                  <DeleteButton id={data.team.id} />
-                </td>
+                <td>{/* <DeleteButton id={data.team.id} /> */}</td>
               </tr>
             ))}
           </tbody>

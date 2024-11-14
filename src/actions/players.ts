@@ -39,7 +39,7 @@ export const addPlayerScoreAndBJ = async (
 
   await db
     .update(player)
-    .set({ score: newScore, blowjobs: newBJ })
+    .set({ score: newScore.toString(), blowjobs: newBJ.toString() })
     .where(eq(player.id, playerId));
 
   return;

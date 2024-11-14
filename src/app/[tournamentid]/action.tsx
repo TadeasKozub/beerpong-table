@@ -5,21 +5,56 @@ import { aliasedTable, and, eq } from "drizzle-orm"; // Replace "some-library" w
 import { revalidatePath } from "next/cache";
 import { db } from "../../db";
 
-export async function loadMatches(id: number) {
+export type MatchWithTeams = {
+  match: {
+    id: number;
+    score: string | null;
+    tournament_id: number | null;
+    team1_id: number | null;
+    team2_id: number | null;
+  };
+  team1: {
+    id: number;
+    name: string | null;
+    score: string | null;
+    player1_id: number | null;
+    player2_id: number | null;
+    tournament_id: number | null;
+  } | null;
+  team2: {
+    id: number;
+    name: string | null;
+    score: string | null;
+    player1_id: number | null;
+    player2_id: number | null;
+    tournament_id: number | null;
+  } | null;
+};
+
+export async function loadMatches(
+  id: number
+): Promise<MatchWithTeams[] | null> {
   const team1 = aliasedTable(team, "team1");
   const team2 = aliasedTable(team, "team2");
+
   const matches = await db
-    .select()
+    .select({
+      match: match,
+      team1: team1,
+      team2: team2,
+    })
     .from(match)
     .where(eq(match.tournament_id, id))
     .leftJoin(team1, eq(match.team1_id, team1.id))
     .leftJoin(team2, eq(match.team2_id, team2.id));
+
   if (matches.length === 0) {
     return null;
   }
-  console.log(matches);
-  return matches;
+
+  return matches as MatchWithTeams[];
 }
+
 export async function loadTournament(id: number) {
   const tournamentData = await db
     .select()
