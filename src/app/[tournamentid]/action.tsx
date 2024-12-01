@@ -1,25 +1,66 @@
 "use server";
 
 import { match, player, team, tournament } from "@/db/schema";
-import { eq } from "drizzle-orm"; // Replace "some-library" with the actual library name
+import { aliasedTable, and, eq } from "drizzle-orm"; // Replace "some-library" with the actual library name
+import { revalidatePath } from "next/cache";
 import { db } from "../../db";
 
-export async function checkMatches(id: number) {
+export type MatchWithTeams = {
+  match: {
+    id: number;
+    score: string | null;
+    tournament_id: number | null;
+    team1_id: number | null;
+    team2_id: number | null;
+  };
+  team1: {
+    id: number;
+    name: string | null;
+    score: string | null;
+    player1_id: number | null;
+    player2_id: number | null;
+    tournament_id: number | null;
+  } | null;
+  team2: {
+    id: number;
+    name: string | null;
+    score: string | null;
+    player1_id: number | null;
+    player2_id: number | null;
+    tournament_id: number | null;
+  } | null;
+};
+
+export async function loadMatches(
+  id: number
+): Promise<MatchWithTeams[] | null> {
+  const team1 = aliasedTable(team, "team1");
+  const team2 = aliasedTable(team, "team2");
+
   const matches = await db
-    .select()
+    .select({
+      match: match,
+      team1: team1,
+      team2: team2,
+    })
     .from(match)
-    .where(eq(match.tournament_id, id));
+    .where(eq(match.tournament_id, id))
+    .leftJoin(team1, eq(match.team1_id, team1.id))
+    .leftJoin(team2, eq(match.team2_id, team2.id));
+
   if (matches.length === 0) {
-    return { bool: false, id: id };
+    return null;
   }
-  return { bool: true, id: id };
+
+  return matches as MatchWithTeams[];
 }
+
 export async function loadTournament(id: number) {
   const tournamentData = await db
     .select()
     .from(tournament)
     .where(eq(tournament.id, id));
-  return tournamentData[0];
+  return tournamentData.length > 0 ? tournamentData[0] : null;
 }
 
 export async function findTeamCount(id: number) {
@@ -36,12 +77,17 @@ export async function createTeam(formData: FormData) {
   const player2 = formData.get("player2") as string;
   const tournamentId = formData.get("tournamentId");
   if (!teamName || !player1 || !player2) {
-    return { error: "All fields are required" };
+    return { error: "Zadej všechny údaje o týmu" };
   }
 
-  const teamExist = await db.select().from(team).where(eq(team.name, teamName));
+  const teamExist = await db
+    .select()
+    .from(team)
+    .where(
+      and(eq(team.name, teamName), eq(team.tournament_id, Number(tournamentId)))
+    );
   if (teamExist.length !== 0) {
-    return { error: "Tym existuje" };
+    return { error: "Tym existuje" + teamName };
   }
 
   let TeamId;
@@ -81,6 +127,7 @@ export async function createTeam(formData: FormData) {
   } catch (error) {
     return { error: "Failed to create players" + error };
   }
+  revalidatePath("/" + tournamentId);
 
   return { success: "Tým " + teamName + " byl vytvořen" };
 }

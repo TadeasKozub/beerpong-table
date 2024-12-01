@@ -24,7 +24,7 @@ export default function CreateTeam(id: { id: number }) {
     const formData = new FormData(event.currentTarget);
     formData.append("tournamentId", id.id.toString());
     const result = await createTeam(formData);
-    const teamCount = await findTeamCount(id.id); ///TODO: implement findTeamCount
+    const teamCount = await findTeamCount(id.id);
     if (result.error) {
       setMessage(result.error);
     } else if (result.success) {
@@ -37,7 +37,7 @@ export default function CreateTeam(id: { id: number }) {
   }
 
   return (
-    <div className="min-h-screen p-8 pb-20 sm:p-20 font-sans">
+    <div className="p-8 pb-20 sm:p-20 font-sans">
       <main className="flex flex-col gap-8 items-center sm:items-start max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">Zadej jméno týmu</h1>
         <p className="text-center">Počet týmů: {teamCount}</p>
